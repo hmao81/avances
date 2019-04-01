@@ -7,7 +7,7 @@ Configurar fondo de pantalla
 */
 	html {
 
-		background: url(img/fondo.jpg);
+		/* background: url(img/fondo.jpg); */
 		background-size: 100%;
 	}
 </style>

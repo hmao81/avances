@@ -8,14 +8,16 @@ Buscar los campos en la base
 */
 $opcion=$_REQUEST['op'];
 $id = $_REQUEST['id'];
-$avance = $_REQUEST['avance'];
-$requerimiento = $_REQUEST['requerimiento'];
-$fecha = $_REQUEST['fecha'];
+$codigo = $_REQUEST['codigo'];
+$avance = utf8_decode($_REQUEST['avance']);
+$requerimiento = utf8_decode($_REQUEST['requerimiento']);
+$fecha = (isset($_REQUEST['fecha'])) ? $_REQUEST['fecha'] : '';
 
 echo "opcion:".$opcion;
+echo "<br>código:".$codigo;
 echo "<br>id:".$id;
-echo "<br>avance:".$avance;
-echo "<br>requerimiento:".$requerimiento;
+echo "<br>avance:".utf8_encode($avance);
+echo "<br>requerimiento:".utf8_encode($requerimiento);
 echo "<br>fecha:".$fecha;
 /*
 Inserta avances
@@ -23,8 +25,8 @@ Inserta avances
 if($opcion=='I')
 {
 
-	$sql = "INSERT INTO tbavances (id, avance, requerimiento, fecha)
-	VALUES ('" . $id . "', '" . $avance . "', '" . $requerimiento . "', NOW())";
+	$sql = "INSERT INTO tbavances (codigo, avance, requerimiento, fecha, id_usuario)
+	VALUES ('" . $codigo . "', '" . $avance . "', '" . $requerimiento . "', NOW(), '" . $_SESSION['id_usuario'] . "')";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "Agregando Avance";
@@ -38,24 +40,24 @@ if($opcion=='I')
 	</script>
 	";
 }
-/*
-Modifica avances
-*/
-if($opcion=='M')
-{	
-	$sql = "update tbavances set avance='$avance',requerimiento='$requerimiento',fecha=now() where id='$id'";
 
-	if ($conn->query($sql) === TRUE) {
+/* Modifica avances */
+if ($opcion=='M') {
+	$sql = "UPDATE tbavances
+		SET avance = '" . $avance . "',
+			requerimiento = '" . $requerimiento . "',
+			codigo = '" . $codigo . "',
+			fecha = NOW()
+		WHERE id = '" . $id . "'";
+
+	if ($conn->query($sql))
 		echo "Actualizado";
-	} else {
-		echo "Error: " . $sql . "<br>" . $conn->error;
-	}
-	
-	echo "
+	else
+		echo "Error: " . $sql . "<br>" . $conn->error;?>
+
 	<script>
-	alert('Actualizando...');
-	</script>
-	";
+		alert('Actualizando...');
+	</script><?php
 }
 /*
 Elimina avances
