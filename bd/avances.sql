@@ -32,14 +32,14 @@ CREATE TABLE `aplicaciones` (
   `id` int(11) NOT NULL,
   `nombre` varchar(300) NOT NULL,
   `url` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_spanish_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `aplicaciones`
 --
 
 INSERT INTO `aplicaciones` (`id`, `nombre`, `url`) VALUES
-(2, 'Habilitar Aplicaciones Usuario', 'union.php'),
+(2, 'Habilitar Aplicaciones Usuario', 'roles.php'),
 (3, 'Gestionar Avances', 'avance1.php'),
 (4, 'Gestionar Usuarios', 'usuarios1.php');
 
@@ -54,7 +54,7 @@ CREATE TABLE `tbavances` (
   `requerimiento` varchar(50) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `avance` longtext CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `fecha` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_spanish_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `tbavances`
@@ -90,7 +90,7 @@ CREATE TABLE `usuarios` (
   `apellidos` varchar(300) NOT NULL,
   `usuarios` varchar(50) NOT NULL,
   `clave` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_spanish_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `usuarios`
@@ -116,7 +116,7 @@ CREATE TABLE `usu_apli` (
   `id` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `id_apli` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_spanish_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `usu_apli`
