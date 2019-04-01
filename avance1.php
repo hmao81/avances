@@ -3,7 +3,18 @@ Gestor de Avances.
 
 Conexion con la bd en php--><?php
 
-include('bd/conexion_log.php');?>
+include('bd/conexion_log.php');
+
+print_r($_GET);
+
+$codigoParam = null;
+if (isset($_GET['codigoParam']))
+	$codigoParam = $_GET['codigoParam'];
+
+$requerimientoParam = null;
+if (isset($_GET['requerimientoParam']))
+	$requerimientoParam = $_GET['requerimientoParam'];?>
+
 
 <!-- Funciones en javascript-->
 <script>
@@ -70,6 +81,13 @@ include('bd/conexion_log.php');?>
 	{
 		document.form.action='avance2.php';
 		document.form.submit();	
+	}
+
+	function buscarAvance()
+	{
+		const buscarXCodigo = document.getElementById('buscarXCodigo').value;
+		const buscarXRequerimiento = document.getElementById('buscarXRequerimiento').value;
+		window.location.href = 'avance1.php?codigoParam=' + buscarXCodigo + '&requerimientoParam=' + buscarXRequerimiento;
 	}
 </script>
 
@@ -180,13 +198,37 @@ include('bd/conexion_log.php');?>
 			<font size=6 color="white">Histórico Avances</font>
 			<br /><br />
 
+			
+			<font>Código</font>&nbsp;
+			<input type="text" id="buscarXCodigo" name="buscarXCodigo" value="<?php echo $codigoParam?>" /><br />
+			<font>Requerimiento</font>&nbsp;
+			<input type="text" id="buscarXRequerimiento" name="buscarXRequerimiento" value="<?php echo $requerimientoParam?>" /><br />
+			
+			<button id="buscar" value="Buscar" onclick="buscarAvance();">Buscar</button><br /><br />
+			
+
 			<!-- 
 			Consulta registros avances
 			-->		
-			<?php	
+			<?php
+
+
+			$sqlCodigo = '';
+			if ($codigoParam != null)
+				$sqlCodigo = ' AND av.codigo = "' . $codigoParam . '"';
+
+			$sqlRequerimiento = '';
+			if ($requerimientoParam != null)
+				$sqlRequerimiento = ' AND av.requerimiento LIKE "%' . $requerimientoParam . '%"';
+
+
+
 			$sql = "SELECT av.*, us.usuarios
 				FROM tbavances av
 					JOIN usuarios us ON av.id_usuario = us.id
+				WHERE 1 = 1"
+					. $sqlCodigo
+					. $sqlRequerimiento . "
 				ORDER BY av.id";
 			$result = $conn->query($sql);
 			$total = $result->num_rows;
@@ -194,7 +236,7 @@ include('bd/conexion_log.php');?>
 				<!-- 
 				Tabla registros avances
 				-->	
-				<table border=1>
+				<table border="1">
 					<tr>
 						<td align="center" bgcolor="white">Código</td>
 						<td align="center" bgcolor="white">Requerimiento</td>
