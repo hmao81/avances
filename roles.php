@@ -60,7 +60,7 @@ Configurar fondo de pantalla
 <style>
 	html {
 
-		/* background: url(img/fondo.jpg); */
+		background: url(img/fondo.jpg);
 		background-size: 100%;
 	}
 </style>
@@ -89,7 +89,7 @@ Logo animado
 <!-- 
 Titulo animado
 -->	
-		<marquee><font size=7 color="white">Conceder Permisos por Usuario</font></marquee>
+		<marquee><font size=7 color="black">Conceder Permisos por Usuario</font></marquee>
 		<BR>
 		<BR>
 		<center>
@@ -97,7 +97,7 @@ Titulo animado
 Formulario Agregar / Quitar aplicaciones usuarios
 -->			
 			<form name=f>
-					<font color="white">Usuario</font>&nbsp;<br><br>
+					<font color="black">Usuario</font>&nbsp;<br><br>
 				<select name=us id=us>
 					<option value=''>-Seleccione-</option>
 					<?php
@@ -141,8 +141,8 @@ Boton enviar formulario
 			<!-- 
 			Titulo tabla de registros usuarios
 			-->
-				<br><br><font size=6 color=white>Lista de Aplicaciones</font><br><br>";
-				echo "<font color=white>Usuario = ".$us."</font><br><br>";
+				<br><br><font size=6 color=black>Lista de Aplicaciones</font><br><br>";
+				echo "<font color=black>Usuario = ".$us."</font><br><br>";
 				echo "<table border=1>
 				<tr>
 				<td align=center bgcolor=white>nombre</td>

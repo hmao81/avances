@@ -7,7 +7,7 @@ Configurar fondo de pantalla
 */
 	html {
 
-		/* background: url(img/fondo.jpg); */
+		background: url(img/fondo.jpg);
 		background-size: 100%;
 	}
 </style>
@@ -36,7 +36,7 @@ Logo animado
 <!--
 Titulo animado
 -->
-		<marquee><font size=7 color="white">Ingreso al Sistema</font></marquee>
+		<marquee><font size=7 color="black">Ingreso al Sistema</font></marquee>
 		<BR>
 		<BR>
 		<center>
@@ -45,10 +45,10 @@ Formulario ingreso credenciales lo envía a valida.php
 -->	
 <form name=form id=form  action="valida.php" method="post">
 	
-<font color="white">Usuario</font>&nbsp;
+<font color="black">Usuario</font>&nbsp;
 <input type=text name=us id=us required>
 <br><br>
-<font color="white">Clave</font>&nbsp; &nbsp; &nbsp; 
+<font color="black">Clave</font>&nbsp; &nbsp; &nbsp; 
 <input type=password name=cl id=cl required>
 <br><br>
 <input type=submit value='Continuar'>

@@ -5,16 +5,18 @@ Conexion con la bd en php--><?php
 
 include('bd/conexion_log.php');
 
-print_r($_GET);
-
+/* Paso de variables para la funcion buscar*/
 $codigoParam = null;
 if (isset($_GET['codigoParam']))
 	$codigoParam = $_GET['codigoParam'];
 
 $requerimientoParam = null;
 if (isset($_GET['requerimientoParam']))
-	$requerimientoParam = $_GET['requerimientoParam'];?>
+	$requerimientoParam = $_GET['requerimientoParam'];
 
+$fechaParam = null;
+if (isset($_GET['fechaParam']))
+	$fechaParam = $_GET['fechaParam'];?>
 
 <!-- Funciones en javascript-->
 <script>
@@ -87,7 +89,10 @@ if (isset($_GET['requerimientoParam']))
 	{
 		const buscarXCodigo = document.getElementById('buscarXCodigo').value;
 		const buscarXRequerimiento = document.getElementById('buscarXRequerimiento').value;
-		window.location.href = 'avance1.php?codigoParam=' + buscarXCodigo + '&requerimientoParam=' + buscarXRequerimiento;
+		const buscarXfecha = document.getElementById('buscarXfecha').value;
+
+		window.location.href = 'avance1.php?codigoParam=' + buscarXCodigo + '&requerimientoParam=' + buscarXRequerimiento
+		+ '&fechaParam=' + buscarXfecha;
 	}
 </script>
 
@@ -95,12 +100,12 @@ if (isset($_GET['requerimientoParam']))
 <style type="text/css">
 	html {
 
-		/* background: url(img/fondo.jpg); */
+		background: url(img/fondo.jpg);
 		background-size: 100%;
 	}
 
 	/*
-	Buscar fijar cabeceras columnas
+	fijar cabeceras columnas
 	http://yonax73.blogspot.com/2014/09/tabla-con-cabecera-estatica-cuerpo-con.html
 	*/
 
@@ -137,6 +142,11 @@ if (isset($_GET['requerimientoParam']))
 		border-right: 1px solid #c4c0c9;
 	}
 
+	td.tdAction {
+		max-width: 9vw;			/*Ancho por celda*/
+		min-width: 9vw;			/*Ancho por celda*/
+	}
+
 	tr:nth-child(2n) {
 		background: none repeat scroll 0 0 #edebeb;
 	}
@@ -161,7 +171,7 @@ if (isset($_GET['requerimientoParam']))
 	<br /><br /><br /><br />
 	<br /><br /><br /><br />
 	<!-- Titulo Animado-->
-	<marquee><font size="7" color="white">Agregar / Actualizar / Eliminar Avances</font></marquee>
+	<marquee><font size="7" color="black">Agregar / Actualizar / Eliminar / Buscar Avances</font></marquee>
 	<br /><br />
 	<center>
 		<!-- Formulario ingreso edicion avances-->			
@@ -169,15 +179,15 @@ if (isset($_GET['requerimientoParam']))
 			<input type="hidden" name="op" id="op" />
 			<input type="hidden" name="id" id="id" />
 
-			<font color="white">Código</font>&nbsp;<br />
+			<font color="black">Código</font>&nbsp;<br />
 			<input type="text" name="codigo" id="codigo" required>
 			<br /><br />
 
-			<font color="white">Requerimiento</font>&nbsp;<br />
+			<font color="black">Requerimiento</font>&nbsp;<br />
 			<textarea name="requerimiento" id="requerimiento" rows="4"  cols="50"></textarea>
 			<br /><br />
 
-			<font color="white">Avance</font>&nbsp; &nbsp;<br />
+			<font color="black">Avance</font>&nbsp; &nbsp;<br />
 			<textarea name="avance" id="avance" rows="4"  cols="50"></textarea>
 			<br /><br />
 			<!-- 
@@ -195,15 +205,26 @@ if (isset($_GET['requerimientoParam']))
 			<!-- 
 			Titulo tabla de registros avances
 			-->
-			<font size=6 color="white">Histórico Avances</font>
+			<font size=6 color="black">Histórico Avances</font>
 			<br /><br />
 
 			
-			<font>Código</font>&nbsp;
-			<input type="text" id="buscarXCodigo" name="buscarXCodigo" value="<?php echo $codigoParam?>" /><br />
-			<font>Requerimiento</font>&nbsp;
-			<input type="text" id="buscarXRequerimiento" name="buscarXRequerimiento" value="<?php echo $requerimientoParam?>" /><br />
+			<font>Código</font>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;
+			<input type="text" id="buscarXCodigo" name="buscarXCodigo" value="<?php echo $codigoParam?>" /><br /><br />
 			
+			<font>Requerimiento</font>&nbsp;
+			<input type="text" id="buscarXRequerimiento" name="buscarXRequerimiento" value="<?php echo $requerimientoParam?>" /><br /><br />
+			
+			<font>Fecha</font>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<input type="date" id="buscarXfecha" name="buscarXfecha" value="<?php echo $fechaParam?>" /><br /><br />
+		
 			<button id="buscar" value="Buscar" onclick="buscarAvance();">Buscar</button><br /><br />
 			
 
@@ -211,7 +232,6 @@ if (isset($_GET['requerimientoParam']))
 			Consulta registros avances
 			-->		
 			<?php
-
 
 			$sqlCodigo = '';
 			if ($codigoParam != null)
@@ -221,14 +241,17 @@ if (isset($_GET['requerimientoParam']))
 			if ($requerimientoParam != null)
 				$sqlRequerimiento = ' AND av.requerimiento LIKE "%' . $requerimientoParam . '%"';
 
-
+			$sqlFecha = '';
+			if ($fechaParam != null)
+				$sqlFecha = ' AND DATE(av.fecha) = "' . $fechaParam . '"';
 
 			$sql = "SELECT av.*, us.usuarios
 				FROM tbavances av
 					JOIN usuarios us ON av.id_usuario = us.id
 				WHERE 1 = 1"
 					. $sqlCodigo
-					. $sqlRequerimiento . "
+					. $sqlRequerimiento 
+					. $sqlFecha . "
 				ORDER BY av.id";
 			$result = $conn->query($sql);
 			$total = $result->num_rows;
@@ -242,10 +265,12 @@ if (isset($_GET['requerimientoParam']))
 						<td align="center" bgcolor="white">Requerimiento</td>
 						<td align="center" bgcolor="white">Avance</td>
 						<td align="center" bgcolor="white">Fecha</td>
-						<td align="center" bgcolor="white">Usuario</td>
-						<td align="center" bgcolor="white">Editar</td>
-						<td align="center" bgcolor="white">Eliminar</td>
-					</tr><?php
+						<td class="tdAction" align="center" bgcolor="white">Usuario</td>
+						<td class="tdAction" align="center" bgcolor="white">Editar</td>
+						<td class="tdAction" align="center" bgcolor="white">Eliminar</td>
+					</tr>
+				</table>
+				<table border="1"><?php
 					/*-- 
 					Llenado de la tabla con datos de la base 
 					*/
@@ -262,15 +287,19 @@ if (isset($_GET['requerimientoParam']))
 							<td bgcolor="white"><?php echo utf8_encode($requerimiento_c)?></td>
 							<td bgcolor="white"><?php echo utf8_encode($avance_c)?></td>
 							<td bgcolor="white"><?php echo $fecha_c?></td>
-							<td bgcolor="white"><?php echo $idUsuario?></td>
+							<td class="tdAction" bgcolor="white"><?php echo $idUsuario?></td>
 							<!-- 
 							boton editar (editar codifica/decodifica la lectura de tildes) avances
 							-->
-							<td><input type=button value='Editar' onclick="editar('<?php echo $id_c?>', '<?php echo $codigo_c?>', '<?php echo base64_encode($avance_c)?>', '<?php echo base64_encode($requerimiento_c)?>', '<?php echo $fecha_c?>');"></td>
+							<td class="tdAction"><input type=button value='Editar' onclick="editar('<?php echo $id_c?>', 
+							'<?php echo $codigo_c?>', '<?php echo base64_encode($avance_c)?>', 
+							'<?php echo base64_encode($requerimiento_c)?>', '<?php base64_encode($fecha_c)?>');">
+
+							</td>
 							<!-- 
 							boton eliminar avances
 							-->
-							<td><input type=button value='Eliminar' onclick="eliminar('<?php echo $id_c?>');"></td>
+							<td class="tdAction"><input type=button value='Eliminar' onclick="eliminar('<?php echo $id_c?>');"></td>
 						</tr><?php
 					}?>
 				</table><?php
@@ -278,4 +307,4 @@ if (isset($_GET['requerimientoParam']))
 		</form>
 	</center>
 </body>
-</html>					
+</html>

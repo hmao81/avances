@@ -76,7 +76,7 @@ Configurar fondo de pantalla
 <style>
 	html {
 
-		/* background: url(img/fondo.jpg); */
+		background: url(img/fondo.jpg);
 		background-size: 100%;
 	}
 </style>
@@ -108,7 +108,7 @@ Logo animado
 <!-- 
 Titulo Animado
 -->
-		<marquee><font size=7 color="white">Agregar Usuarios</font></marquee>
+		<marquee><font size=7 color="black">Agregar Usuarios</font></marquee>
 		<BR>
 		<BR>
 		<center>
@@ -120,22 +120,22 @@ Formulario ingreso / edicion usuarios
 				<input type=hidden name="id" id="id" value="">
 		<table>				
 			<tr>
-				<font color="white">Nombres</font>&nbsp;&nbsp;
+				<font color="black">Nombres</font>&nbsp;&nbsp;
 				<input type=text name="nombre" id="nombre" required>
 				<br><br>
 			</tr>
 			<tr>	
-				<font color="white">Apellidos</font>&nbsp;
+				<font color="black">Apellidos</font>&nbsp;
 				<input type=text name="apellidos" id="apellidos" required>
 				<br><br>
 			</tr>
 			<tr>
-				<font color="white">Usuario</font>&nbsp;&nbsp;&nbsp;
+				<font color="black">Usuario</font>&nbsp;&nbsp;&nbsp;
 				<input type=text name="usuarios" id="usuarios" required>
 				<br><br>
 			</tr>
 			<tr>
-				<font color="white">Clave</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<font color="black">Clave</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type=password name="clave" id="clave" required>
 				<br><br>
 			</tr>
@@ -153,7 +153,7 @@ Boton enviar formulario
 Titulo tabla de registros usuarios
 -->
 				<br><br>
-				<font size=6 color="white">Usuarios del sistema</font>
+				<font size=6 color="black">Usuarios del sistema</font>
 				<br><br>
 <!-- 
 Consulta registros avances
