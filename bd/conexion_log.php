@@ -3,11 +3,12 @@ session_start();
 
 include('def_globales.inc');
 
-
-///sesion
+//sesion
 if ($_SESSION["autentificado"] != "SI") 
-{  	echo "<script>alert('Su sesion ha expirado, por favor autenticarse');</script>";
-	echo "<script>location.href='../login.php';</script>";
+{  	echo "
+	<script>alert('Su sesion ha expirado, por favor autenticarse');</script>";
+	echo "
+	<script>location.href='../login.php';</script>";
 	exit;
 } 
 else 
@@ -22,10 +23,6 @@ else
     $_SESSION["ultimoAcceso"] = $ahora;
 	}
 } 
-
 //fin sesion
-
-
 $conn = new mysqli($servidor,$usuario,$clave,$base);
 ?>
-

@@ -29,9 +29,10 @@ if($total>0)
 }	
 else
 {
-	echo "<script>alert('Usuario y/o Clave Incorrectos !!!');
-	location.href='../login.php';
+/* Redirige al index */
+	echo "
+	<script>alert('Usuario y/o Clave Incorrectos !!!');
+		location.href='index.php';
 	</script>";
 }
-
 ?>

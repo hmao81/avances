@@ -1,11 +1,7 @@
 <?php
-/*
-Conexion con la bd en php
-*/
+/* Conexion con la bd en php */
 include('bd/conexion_log.php');
-/*
-Buscar los campos en la base
-*/
+/* Buscar los campos en la base */
 $opcion=$_REQUEST['op'];
 $id = $_REQUEST['id'];
 $nombre = $_REQUEST['nombre'];
@@ -21,7 +17,6 @@ echo "<br>clave:".$clave;
 
 if($opcion=='I')
 {
-
 	$sql = "INSERT INTO usuarios (nombre, apellidos, usuarios, clave)
 	VALUES ('" . $nombre . "', '" . $apellidos . "', '" . $usuarios . "', '" . $clave . "')";
 
@@ -30,13 +25,11 @@ if($opcion=='I')
 	} else {
 		echo "Error: " . $sql . "<br>" . $conn->error;
 	}
-
 	echo "
 	<script>
-	alert('Usuario Insertado');
+		alert('Usuario Insertado');
 	</script>
 	";
-
 }
 if($opcion=='M')
 {	
@@ -50,7 +43,7 @@ if($opcion=='M')
 	
 	echo "
 	<script>
-	alert('Actualizado');
+		alert('Actualizado');
 	</script>
 	";
 
@@ -67,7 +60,7 @@ if($opcion=='E')
 
 	echo "
 	<script>
-	alert('Eliminado');
+		alert('Eliminado');
 	</script>
 	";
 
@@ -75,9 +68,7 @@ if($opcion=='E')
 
 echo "
 <script>
-location.href='usuarios1.php';
+	location.href='usuarios1.php';
 </script>
-
 ";
-
 ?>

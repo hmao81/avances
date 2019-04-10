@@ -1,13 +1,9 @@
 <?php
-/*
-Conexion con la bd en php
-*/	
+/* Conexion con la bd en php */	
 include('bd/conexion_log.php');
 
 error_reporting(0);
-/*
-Llegan datos en variables
-*/
+/* Llegan datos en variables */
 $op='';
 $op=$_REQUEST['op'];
 
@@ -18,9 +14,7 @@ $us=$_REQUEST['usuario'];
 
 $apl='';
 $apl=$_REQUEST['apli'];
-/* 
-Agrega acceso a la aplicacion para el usuario
-*/
+/* Agrega acceso a la aplicacion para el usuario */
 if($op=='I')
 {
 	$sql = "INSERT INTO usu_apli(id_usuario,id_apli) VALUES ('$us', '$apl')";
@@ -32,13 +26,11 @@ if($op=='I')
 	}
 	echo "
 	<script>
-	alert('Agregado');
+		alert('Agregado');
 	</script>
 	";
 }
-/* 
-Quita acceso a la aplicacion para el usuario
-*/	
+/* Quita acceso a la aplicacion para el usuario */	
 if($op=='E')
 {
 	$sql = "delete from usu_apli where id_usuario='$us' and id_apli='$apl'";
@@ -47,21 +39,17 @@ if($op=='E')
 		echo "Creado";
 	} else {
 		echo "Error: " . $sql . "<br>" . $conn->error;
-	}
-	
+	}	
 	echo "
 	<script>
-	alert('Eliminado');
+		alert('Eliminado');
 	</script>
 	";
 }
-/*
-Envia los datos a la clase roles.php
-*/
+/* Envia los datos a la clase roles.php */
 echo "
 <script>
-location.href='roles.php';
+	location.href='roles.php';
 </script>
 ";
-
 ?>

@@ -1,11 +1,7 @@
 <?php
-/*
-Conexion con la bd en php
-*/
+/* Conexion con la bd en php */
 include('bd/conexion_log.php');
-/*
-Buscar los campos en la base
-*/
+/* Buscar los campos en la base */
 $opcion=$_REQUEST['op'];
 $id = $_REQUEST['id'];
 $codigo = $_REQUEST['codigo'];
@@ -19,12 +15,9 @@ echo "<br>id:".$id;
 echo "<br>avance:".utf8_encode($avance);
 echo "<br>requerimiento:".utf8_encode($requerimiento);
 echo "<br>fecha:".$fecha;
-/*
-Inserta avances
-*/
+/* Inserta avances */
 if($opcion=='I')
 {
-
 	$sql = "INSERT INTO tbavances (codigo, avance, requerimiento, fecha, id_usuario)
 	VALUES ('" . $codigo . "', '" . $avance . "', '" . $requerimiento . "', NOW(), '" . $_SESSION['id_usuario'] . "')";
 
@@ -36,7 +29,7 @@ if($opcion=='I')
 
 	echo "
 	<script>
-	alert('Insertando...');
+		alert('Insertando...');
 	</script>
 	";
 }
@@ -59,9 +52,7 @@ if ($opcion=='M') {
 		alert('Actualizando...');
 	</script><?php
 }
-/*
-Elimina avances
-*/
+/* Elimina avances */
 if($opcion=='E')
 {
 	$sql = "delete from tbavances where id='$id'";
@@ -74,18 +65,14 @@ if($opcion=='E')
 
 	echo "
 	<script>
-	alert('Eliminando...');
+		alert('Eliminando...');
 	</script>
 	";
 }
-/*
-Envia lo procesado a la clase avance1.php
-*/
+/* Envia lo procesado a la clase avance1.php */
 echo "
 <script>
-location.href='avance1.php';
+	location.href='avance1.php';
 </script>
-
 ";
-
 ?>

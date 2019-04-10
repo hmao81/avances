@@ -8,10 +8,8 @@ session_unset();
 
 echo "<script>
 alert('Cerrando Sesion');
-/*
-Redirige al index
-*/
-location.href='index.php';
+    /* Redirige al index */
+    location.href='index.php';
 </script>";
 exit;
 ?>
