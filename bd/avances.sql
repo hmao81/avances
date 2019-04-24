@@ -85,6 +85,7 @@ CREATE TABLE tbavances (
   avance longtext NOT NULL,
   fecha datetime NOT NULL,
   id_usuario INT NOT NULL,
+  porcentaje_avance int(3) NOT NULL,
   PRIMARY KEY(id),
   FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
 ) ENGINE=InnoDB;
