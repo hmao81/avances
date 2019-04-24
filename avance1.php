@@ -5,7 +5,7 @@ Conexion con la bd en php-->
 <?php
 include('bd/conexion_log.php');
 
-/* Paso de variables para la funcion buscar*/
+/* Paso de variables para la funcion busqueda*/
 $codigoParam = null;
 if (isset($_GET['codigoParam']))
 	$codigoParam = $_GET['codigoParam'];
@@ -36,7 +36,7 @@ if (isset($_GET['fechaParam']))
 	}
 
 	/* Funcion Modificar Avances */
-	function editar(id, codigo, avance, requerimiento)
+	function editar(id, codigo, avance, requerimiento, porcentaje_avance)
 	{
 		alert('Modificando el avance del sistema con el código: ' + codigo);
 		/* Se codifican y decodifican los datos del campo para reconocer tildes */
@@ -50,6 +50,7 @@ if (isset($_GET['fechaParam']))
 		document.form.codigo.value = codigo;
 		document.form.avance.value = avance;
 		document.form.requerimiento.value = requerimiento;
+		document.form.porcentaje_avance.value = porcentaje_avance;
 
 		document.form.bti.style.display='none';
 		document.form.btm.style.display='block';
@@ -79,8 +80,8 @@ if (isset($_GET['fechaParam']))
 		const buscarXRequerimiento = document.getElementById('buscarXRequerimiento').value;
 		const buscarXfecha = document.getElementById('buscarXfecha').value;
 
-		window.location.href = 'avance1.php?codigoParam=' + buscarXCodigo + '&requerimientoParam=' + buscarXRequerimiento
-		+ '&fechaParam=' + buscarXfecha;
+		window.location.href = 'avance1.php?codigoParam=' + buscarXCodigo + '&requerimientoParam=' 
+		+ buscarXRequerimiento + '&fechaParam=' + buscarXfecha;
 	}
 </script>
 
@@ -167,6 +168,11 @@ if (isset($_GET['fechaParam']))
 				<font color="black">Avance</font>&nbsp; &nbsp;<br />
 				<textarea name="avance" id="avance" rows="4"  cols="50"></textarea>
 				<br /><br />
+			
+				<font color="black">Porcentaje de Avance</font>&nbsp; &nbsp;<br />
+				<input type="text" name="porcentaje_avance" id="porcentaje_avance" size="3" required> %
+				<br /><br />
+			
 				<!-- Boton enviar formulario -->
 				<table>
 					<tr>
@@ -184,10 +190,12 @@ if (isset($_GET['fechaParam']))
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				&nbsp;&nbsp;&nbsp;
 				&nbsp;&nbsp;&nbsp;
-				<input type="text" id="buscarXCodigo" name="buscarXCodigo" value="<?php echo $codigoParam?>" /><br /><br />
+				<input type="text" id="buscarXCodigo" name="buscarXCodigo" value="<?php echo $codigoParam?>" />
+				<br /><br />
 				
 				<font>Requerimiento</font>&nbsp;
-				<input type="text" id="buscarXRequerimiento" name="buscarXRequerimiento" value="<?php echo $requerimientoParam?>" /><br /><br />
+				<input type="text" id="buscarXRequerimiento" name="buscarXRequerimiento" value="<?php 
+				echo $requerimientoParam?>" /><br /><br />
 				
 				<font>Fecha</font>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -200,7 +208,7 @@ if (isset($_GET['fechaParam']))
 				
 				<!-- Consulta avances -->		
 				<?php
-				/* Paso de variables para la consulta por codigo, requerimiento y fecha */
+				/* Paso de variables para la consulta por codigo, requerimiento y fecha declaradas parte superior*/
 				$sqlCodigo = '';
 				if ($codigoParam != null)
 					$sqlCodigo = ' AND av.codigo = "' . $codigoParam . '"';
@@ -232,6 +240,7 @@ if (isset($_GET['fechaParam']))
 							<td align="center" bgcolor="white">Requerimiento</td>
 							<td align="center" bgcolor="white">Avance</td>
 							<td align="center" bgcolor="white">Fecha</td>
+							<td align="center" bgcolor="white">Porcentaje Avance</td>
 							<td class="tdAction" align="center" bgcolor="white">Usuario</td>
 							<td class="tdAction" align="center" bgcolor="white">Editar</td>
 							<td class="tdAction" align="center" bgcolor="white">Eliminar</td>
@@ -248,20 +257,25 @@ if (isset($_GET['fechaParam']))
 							$requerimiento_c = $row["requerimiento"];
 							$avance_c = $row["avance"];
 							$fecha_c = $row["fecha"];
-							$idUsuario = $row["usuarios"];?>
+							$porcentaje_avance_c = $row["porcentaje_avance"];
+							$idUsuario = $row["usuarios"];
+							?>
 							<tr>								
 								<td bgcolor="white"><?php echo $codigo_c?></td>
 								<td bgcolor="white"><?php echo utf8_encode($requerimiento_c)?></td>
 								<td bgcolor="white"><?php echo utf8_encode($avance_c)?></td>
 								<td bgcolor="white"><?php echo $fecha_c?></td>
+								<td bgcolor="white"><?php echo $porcentaje_avance_c?></td>
 								<td class="tdAction" bgcolor="white"><?php echo $idUsuario?></td>
 								<!-- boton editar (editar codifica/decodifica la lectura de tildes) avances -->
 								<td class="tdAction"><input type=button value='Editar' onclick="editar('<?php echo $id_c?>', 
 								'<?php echo $codigo_c?>', '<?php echo base64_encode($avance_c)?>', 
-								'<?php echo base64_encode($requerimiento_c)?>', '<?php base64_encode($fecha_c)?>');">
-								</td>
+								'<?php echo base64_encode($requerimiento_c)?>', '<?php base64_encode($fecha_c)?>',
+								'<?php echo $porcentaje_avance_c?>');"></td>
 								<!-- boton eliminar avances -->
-								<td class="tdAction"><input type=button value='Eliminar' onclick="eliminar('<?php echo $id_c?>');"></td>
+								<td class="tdAction"><input type=button value='Eliminar' onclick="eliminar('<?php 
+								echo $id_c?>');">
+								</td>
 							</tr><?php
 						}?>
 					</table><?php
