@@ -95,17 +95,17 @@ CREATE TABLE tbavances (
 --
 
 INSERT INTO 'tbavances' ('codigo', 'requerimiento', 'avance', 'fecha', 'id_usuario', 'porcentaje_avance') VALUES
-(2, '', 'Se Ejecutan los casos de prueba.', '0000-00-00 00:00:00', 2, 4),
-(1, 'sprint3. iteración 2.', 'Se realizan los casos de prueba del requerimiento.', '2019-03-15 09:25:33', 3, 5),
-(3, '', 'Se encuentran incidencias por lo que se reporta al programador Juan.', '0000-00-00 00:00:00', 4, 10),
-(5, '', 'Se genera el ticket 001 para atender las incidencia presentada.', '0000-00-00 00:00:00', 4, 6),
-(4, '', 'Luego de que se resuelve la incidencia, se continuan las pruebas.', '0000-00-00 00:00:00', 3, 7),
-(6, '', 'No se encuentran más incidencias, procede a certificar.', '0000-00-00 00:00:00', 2, 8),
-(7, '', 'Se realiza la certificación del plan de pruebas, el informe se encuentra en el link http://172.17.35.23:8080/testlink/index.php?caller=login', '0000-00-00 00:00:00', 1, 9),
-(8, '', 'adicionando un avance \r\na las 5:52pm', '2019-03-14 17:52:48', 2, 10),
-(9, '', 'asjd askjdf\r\nasklhjklashfko', '2019-03-14 17:37:21', 3, 3),
-(10, '', 'El avance que surge por segunda vez luego de insertar la fecha actual. Este si funciona al editarlo', '2019-03-15 08:42:52', 4, 4),
-(234234, 'asassas', 'aas', '2019-03-15 12:11:24', 1, 1);
+(2, 'Sprint3. iteración 1.', 'Se Ejecutan los casos de prueba.', '0000-00-00 00:00:00', 2, 4),
+(1, 'Sprint3. iteración 2.', 'Se realizan los casos de prueba del requerimiento.', '2019-03-15 09:25:33', 3, 5),
+(3, 'Sprint2. iteración 2.', 'Se encuentran incidencias por lo que se reporta al programador Juan.', '0000-00-00 00:00:00', 4, 10),
+(5, 'Sprint2. iteración 1.', 'Se genera el ticket 001 para atender las incidencia presentada.', '0000-00-00 00:00:00', 4, 6),
+(4, 'Sprint1. iteración 2.', 'Luego de que se resuelve la incidencia, se continuan las pruebas.', '0000-00-00 00:00:00', 3, 7),
+(6, 'Sprint1. iteración 1.', 'No se encuentran más incidencias, procede a certificar.', '0000-00-00 00:00:00', 2, 8),
+(7, 'Sprint3. iteración 2.', 'Se realiza la certificación del plan de pruebas, el informe se encuentra en el link http://172.17.35.23:8080/testlink/index.php?caller=login', '0000-00-00 00:00:00', 1, 9),
+(8, 'Sprint3. iteración 1.', 'adicionando un avance \r\na las 5:52pm', '2019-03-14 17:52:48', 2, 10),
+(9, 'Sprint2. iteración 2.', 'Se soluciona la incidencia 2233', '2019-03-14 17:37:21', 3, 3),
+(10, 'Sprint2. iteración 1.', 'El avance que surge por segunda vez luego de insertar la fecha actual. Este si funciona al editarlo', '2019-03-15 08:42:52', 4, 4),
+(11, 'Sprint1. iteración 2.', 'Se encuentra incidencia 11200', '2019-03-15 12:11:24', 1, 1);
 
 -- --------------------------------------------------------
 

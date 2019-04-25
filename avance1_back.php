@@ -19,8 +19,7 @@ if (isset($_GET['fechaParam']))
 	$fechaParam = $_GET['fechaParam'];?>
 
 <!-- Funciones en javascript-->
-<!-- Librerias grafico de barras-->
-<script src="ejemplo-chart/js/chart.js/Chart.min.js">
+<script>
 	/* Funcion Agregar Avances lo envia a la clase avance2.php */
 	function insertar()
 	{
@@ -130,13 +129,8 @@ if (isset($_GET['fechaParam']))
 	tr:nth-child(2n) {
 		background: none repeat scroll 0 0 #edebeb;
 	}
-
-	/* Administra el tamaño en % del grafico de barras */
-	.chart {
-		width: 90% !important;
-		height: 90% !important;
-	}
 </style>
+
 <!-- Encabezado HTML -->
 <html>
 	<head>
@@ -287,48 +281,6 @@ if (isset($_GET['fechaParam']))
 					</table><?php
 				}?>
 			</form>
-			<!-- Lienzo para pintar la imagen -->
-			<canvas class="chart" id="chart1"></canvas>
-			<script>
-				var chart1 = document.getElementById('chart1');
-
-				var myChart1 = new Chart(chart1, {
-					type: 'bar',
-					data: {
-						labels: ['Usuario 1', 'Usuario 2', 'Usuario 3', 'Usuario 4', 'Usuario 5', 'Usuario 6'],
-						datasets: [{
-							label: '% de avance por usuario',
-							data: [50, 0, 85, 38, 23, 44],
-							backgroundColor: [
-								'rgba(255, 99, 132, 0.2)',
-								'rgba(54, 162, 235, 0.2)',
-								'rgba(255, 206, 86, 0.2)',
-								'rgba(75, 192, 192, 0.2)',
-								'rgba(153, 102, 255, 0.2)',
-								'rgba(255, 159, 64, 0.2)'
-							],
-							borderColor: [
-								'rgba(255, 99, 132, 1)',
-								'rgba(54, 162, 235, 1)',
-								'rgba(255, 206, 86, 1)',
-								'rgba(75, 192, 192, 1)',
-								'rgba(153, 102, 255, 1)',
-								'rgba(255, 159, 64, 1)'
-							],
-							borderWidth: 1
-						}]
-					},
-					options: {
-						scales: {
-							yAxes: [{
-								ticks: {
-									beginAtZero: true
-								}
-							}]
-						}
-					}
-				});
-			</script>
 		</center>
 	</body>
 </html>

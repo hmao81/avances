@@ -1,0 +1,88 @@
+<script src="js/chart.js/Chart.min.js"></script>
+
+<style>
+	.chart {
+		width: 90% !important;
+		height: 90% !important;
+	}
+</style>
+
+<canvas class="chart" id="chart1"></canvas>
+<canvas class="chart" id="chart2"></canvas>
+<script>
+	var chart1 = document.getElementById('chart1');
+	var chart2 = document.getElementById('chart2');
+	var myChart1 = new Chart(chart1, {
+		type: 'bar',
+		data: {
+			labels: ['Usuario 1', 'Usuario 2', 'Usuario 3', 'Usuario 4', 'Usuario 5', 'Usuario 6'],
+			datasets: [{
+				label: '% de avance por usuario',
+				data: [50, 0, 85, 38, 23, 44],
+				backgroundColor: [
+					'rgba(255, 99, 132, 0.2)',
+					'rgba(54, 162, 235, 0.2)',
+					'rgba(255, 206, 86, 0.2)',
+					'rgba(75, 192, 192, 0.2)',
+					'rgba(153, 102, 255, 0.2)',
+					'rgba(255, 159, 64, 0.2)'
+				],
+				borderColor: [
+					'rgba(255, 99, 132, 1)',
+					'rgba(54, 162, 235, 1)',
+					'rgba(255, 206, 86, 1)',
+					'rgba(75, 192, 192, 1)',
+					'rgba(153, 102, 255, 1)',
+					'rgba(255, 159, 64, 1)'
+				],
+				borderWidth: 1
+			}]
+		},
+		options: {
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					}
+				}]
+			}
+		}
+	});
+
+	var myChart2 = new Chart(chart2, {
+		type: 'bar',
+		data: {
+			labels: ['Requerimiento 1', 'Requerimiento 2', 'Requerimiento 3', 'Requerimiento 4', 'Requerimiento 5', 'Requerimiento 6'],
+			datasets: [{
+				label: '% de avance por requerimiento',
+				data: [80, 50, 85, 65, 23, 44],
+				backgroundColor: [
+					'rgba(255, 99, 132, 0.2)',
+					'rgba(54, 162, 235, 0.2)',
+					'rgba(255, 206, 86, 0.2)',
+					'rgba(75, 192, 192, 0.2)',
+					'rgba(153, 102, 255, 0.2)',
+					'rgba(255, 159, 64, 0.2)'
+				],
+				borderColor: [
+					'rgba(255, 99, 132, 1)',
+					'rgba(54, 162, 235, 1)',
+					'rgba(255, 206, 86, 1)',
+					'rgba(75, 192, 192, 1)',
+					'rgba(153, 102, 255, 1)',
+					'rgba(255, 159, 64, 1)'
+				],
+				borderWidth: 1
+			}]
+		},
+		options: {
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					}
+				}]
+			}
+		}
+	});
+</script>
