@@ -297,7 +297,7 @@ if (isset($_GET['fechaParam']))
 					data: {
 						labels: ['Usuario 1', 'Usuario 2', 'Usuario 3', 'Usuario 4', 'Usuario 5', 'Usuario 6'],
 						datasets: [{
-							label: '% de avance por usuario',
+							label: 'porcentaje_avance',
 							data: [50, 0, 85, 38, 23, 44],
 							backgroundColor: [
 								'rgba(255, 99, 132, 0.2)',
