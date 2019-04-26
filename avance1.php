@@ -16,8 +16,26 @@ if (isset($_GET['requerimientoParam']))
 
 $fechaParam = null;
 if (isset($_GET['fechaParam']))
-	$fechaParam = $_GET['fechaParam'];?>
+	$fechaParam = $_GET['fechaParam'];
 
+/* Paso de variables para el grafico*/
+$usuarioParam = null;
+if (isset($_GET['usuarioParam']))
+	$usuarioParam = $_GET['usuarioParam'];
+	
+$nombreParam = null;
+if (isset($_GET['nombreParam']))
+	$nombreParam = $_GET['nombreParam'];
+	
+$apellidosParam = null;
+if (isset($_GET['apellidosParam']))
+	$apellidosParam = $_GET['apellidosParam'];	
+	
+$porcentajeParam = null;
+if (isset($_GET['porcentajeParam']))
+	$porcentajeParam = $_GET['porcentajeParam'];	
+	
+?>
 <!-- Funciones en javascript-->
 <!-- Librerias grafico de barras-->
 <script src="ejemplo-chart/js/chart.js/Chart.min.js">
@@ -227,7 +245,7 @@ if (isset($_GET['fechaParam']))
 				if ($fechaParam != null)
 					$sqlFecha = ' AND DATE(av.fecha) = "' . $fechaParam . '"';
 					
-				/* Query que consulta en la base */
+				/* Query que consulta en la base para llenar la tabla*/
 				$sql = "SELECT av.*, us.usuarios
 					FROM tbavances av
 						JOIN usuarios us ON av.id_usuario = us.id
@@ -287,7 +305,48 @@ if (isset($_GET['fechaParam']))
 					</table><?php
 				}?>
 			</form>
-			<!-- Lienzo para pintar la imagen -->
+			<?php
+				/* Paso de variables para la consulta por codigo, requerimiento y fecha declaradas parte superior*/
+				$sqlUsuario = '';
+				if ($usuarioParam != null)
+					$sqlUsuario = ' AND a.id_usuario = "' . $usuarioParam . '"';
+			
+					$sqlNombre = '';
+				if ($nombreParam != null)
+					$sqlNombre = ' AND u.nombre = "' . $nombreParam . '"';
+
+					$sqlApellidos = '';
+				if ($apellidosParam != null)
+					$sqlApellidos = ' AND u.apellidos = "' . $apellidosParam . '"';
+
+					$sqlPorcentaje_avance = '';
+					if ($porcentajeParam != null)
+						$sqlPorcentaje_avance = ' AND a.porcentaje_avance = "' . $porcentajeParam . '"';					
+
+				/* Query que consulta en la base para el grafico*/
+				$sql1 = "SELECT SUM(a.porcentaje_avance), a.id_usuario, u.nombre, u.apellidos
+				FROM tbavances a
+				JOIN usuarios u ON (a.id_usuario = u.id)
+				GROUP BY a.id_usuario"
+						. $sqlUsuario
+						. $sqlNombre
+						. $sqlApellidos
+						. $sqlPorcentaje_avance . "
+					ORDER BY a.id_usuario";
+				$result1 = $conn->query($sql1);
+				$total1 = $result1->num_rows1;
+				
+				if ($total1 > 0) {
+					for ($i = 1; $i <= $total1;$i++) {
+						$row = $result->fetch_assoc();
+						$id_c = $row["id"];
+						$porcentaje_avance_c = $row["porcentaje_avance"];
+						$idUsuario = $row["usuarios"];
+						$nombre = $row["nombre"];
+						$apellidos = $row["apellidos"];
+					?>
+
+				<!-- Lienzo para pintar la imagen -->
 			<canvas class="chart" id="chart1"></canvas>
 			<script>
 				var chart1 = document.getElementById('chart1');
@@ -295,9 +354,9 @@ if (isset($_GET['fechaParam']))
 				var myChart1 = new Chart(chart1, {
 					type: 'bar',
 					data: {
-						labels: ['Usuario 1', 'Usuario 2', 'Usuario 3', 'Usuario 4', 'Usuario 5', 'Usuario 6'],
+						labels: ['<?php echo $idUsuario?>', 'Usuario 2', 'Usuario 3', 'Usuario 4', 'Usuario 5', 'Usuario 6'],
 						datasets: [{
-							label: 'porcentaje_avance',
+							label: '<?php echo $porcentaje_avance_c?>',
 							data: [50, 0, 85, 38, 23, 44],
 							backgroundColor: [
 								'rgba(255, 99, 132, 0.2)',
