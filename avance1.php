@@ -18,23 +18,23 @@ $fechaParam = null;
 if (isset($_GET['fechaParam']))
 	$fechaParam = $_GET['fechaParam'];
 
-/* Paso de variables para el grafico*/
+/* Paso de variables para el grafico
 $usuarioParam = null;
 if (isset($_GET['usuarioParam']))
-	$usuarioParam = $_GET['usuarioParam'];
+	$usuarioParam = $_POST['usuarioParam'];
 	
 $nombreParam = null;
 if (isset($_GET['nombreParam']))
-	$nombreParam = $_GET['nombreParam'];
+	$nombreParam = $_POST['nombreParam'];
 	
 $apellidosParam = null;
 if (isset($_GET['apellidosParam']))
-	$apellidosParam = $_GET['apellidosParam'];	
+	$apellidosParam = $_POST['apellidosParam'];	
 	
 $porcentajeParam = null;
 if (isset($_GET['porcentajeParam']))
-	$porcentajeParam = $_GET['porcentajeParam'];	
-	
+	$porcentajeParam = $_POST['porcentajeParam'];	
+*/	
 ?>
 <!-- Funciones en javascript-->
 <!-- Librerias grafico de barras-->
@@ -75,7 +75,7 @@ if (isset($_GET['porcentajeParam']))
 		document.form.btm.style.display='block';
 	}
 
-	/* Funcion Eliminar Avances lo envia a la clase avance2.php */	
+	/* Funcion Eliminar Avances que envia a la clase avance2.php */	
 	function eliminar(id)
 	{
 		alert('Eliminando el avance...');
@@ -86,7 +86,7 @@ if (isset($_GET['porcentajeParam']))
 		document.form.submit();	
 	}
 
-	/* Funcion Enviar Formulario lo envia a la clase avance2.php para realizar las operaciones enviar, buscar */	
+	/* Funcion Enviar Formulario que envia a la clase avance2.php para realizar las operaciones enviar, buscar */	
 	function enviar()
 	{
 		document.form.action='avance2.php';
@@ -245,7 +245,7 @@ if (isset($_GET['porcentajeParam']))
 				if ($fechaParam != null)
 					$sqlFecha = ' AND DATE(av.fecha) = "' . $fechaParam . '"';
 					
-				/* Query que consulta en la base para llenar la tabla*/
+				/* Query que consulta y trae los datos de la base para llenar la tabla*/
 				$sql = "SELECT av.*, us.usuarios
 					FROM tbavances av
 						JOIN usuarios us ON av.id_usuario = us.id
@@ -305,8 +305,11 @@ if (isset($_GET['porcentajeParam']))
 					</table><?php
 				}?>
 			</form>
+
 			<?php
-				/* Paso de variables para la consulta por codigo, requerimiento y fecha declaradas parte superior*/
+
+/* Paso de variables para la consulta por codigo, requerimiento y fecha declaradas parte superior*/
+/*
 				$sqlUsuario = '';
 				if ($usuarioParam != null)
 					$sqlUsuario = ' AND a.id_usuario = "' . $usuarioParam . '"';
@@ -322,72 +325,78 @@ if (isset($_GET['porcentajeParam']))
 					$sqlPorcentaje_avance = '';
 					if ($porcentajeParam != null)
 						$sqlPorcentaje_avance = ' AND a.porcentaje_avance = "' . $porcentajeParam . '"';					
-
-				/* Query que consulta en la base para el grafico*/
-				$sql1 = "SELECT SUM(a.porcentaje_avance), a.id_usuario, u.nombre, u.apellidos
-				FROM tbavances a
-				JOIN usuarios u ON (a.id_usuario = u.id)
-				GROUP BY a.id_usuario"
+*/
+				/* Query que trae los datos de la base para el grafico */
+/*
+				$sql1 = "SELECT SUM(av.porcentaje_avance), av.id_usuario, us.nombre, us.apellidos
+				FROM tbavances av
+				JOIN usuarios us ON (av.id_usuario = us.id)
+				GROUP BY av.id_usuario"
 						. $sqlUsuario
 						. $sqlNombre
 						. $sqlApellidos
 						. $sqlPorcentaje_avance . "
-					ORDER BY a.id_usuario";
+					ORDER BY av.id_usuario";
 				$result1 = $conn->query($sql1);
 				$total1 = $result1->num_rows1;
 				
 				if ($total1 > 0) {
 					for ($i = 1; $i <= $total1;$i++) {
-						$row = $result->fetch_assoc();
+						$row = $result1->fetch_assoc();
 						$id_c = $row["id"];
 						$porcentaje_avance_c = $row["porcentaje_avance"];
 						$idUsuario = $row["usuarios"];
 						$nombre = $row["nombre"];
 						$apellidos = $row["apellidos"];
-					?>
+*/
+						?>
 
-				<!-- Lienzo para pintar la imagen -->
-			<canvas class="chart" id="chart1"></canvas>
-			<script>
-				var chart1 = document.getElementById('chart1');
+						<!-- Lienzo para pintar la imagen -->
+					<canvas class="chart" id="chart1"></canvas>
+					<script>
+						var chart1 = document.getElementById('chart1');
 
-				var myChart1 = new Chart(chart1, {
-					type: 'bar',
-					data: {
-						labels: ['<?php echo $idUsuario?>', 'Usuario 2', 'Usuario 3', 'Usuario 4', 'Usuario 5', 'Usuario 6'],
-						datasets: [{
-							label: '<?php echo $porcentaje_avance_c?>',
-							data: [50, 0, 85, 38, 23, 44],
-							backgroundColor: [
-								'rgba(255, 99, 132, 0.2)',
-								'rgba(54, 162, 235, 0.2)',
-								'rgba(255, 206, 86, 0.2)',
-								'rgba(75, 192, 192, 0.2)',
-								'rgba(153, 102, 255, 0.2)',
-								'rgba(255, 159, 64, 0.2)'
-							],
-							borderColor: [
-								'rgba(255, 99, 132, 1)',
-								'rgba(54, 162, 235, 1)',
-								'rgba(255, 206, 86, 1)',
-								'rgba(75, 192, 192, 1)',
-								'rgba(153, 102, 255, 1)',
-								'rgba(255, 159, 64, 1)'
-							],
-							borderWidth: 1
-						}]
-					},
-					options: {
-						scales: {
-							yAxes: [{
-								ticks: {
-									beginAtZero: true
+						var myChart1 = new Chart(chart1, {
+							type: 'bar',
+							data: {
+								/* '$idUsuario' entre tags php */
+								labels: ['Usuario 1', 'Usuario 2', 'Usuario 3', 'Usuario 4', 'Usuario 5', 'Usuario 6'],
+								datasets: [{
+									/* '$porcentaje_avance_c' entre tags php  */
+									label: 'Porcentaje Usuarios',
+									data: [50, 0, 85, 38, 23, 44],
+									backgroundColor: [
+										'rgba(255, 99, 132, 0.2)',
+										'rgba(54, 162, 235, 0.2)',
+										'rgba(255, 206, 86, 0.2)',
+										'rgba(75, 192, 192, 0.2)',
+										'rgba(153, 102, 255, 0.2)',
+										'rgba(255, 159, 64, 0.2)'
+									],
+									borderColor: [
+										'rgba(255, 99, 132, 1)',
+										'rgba(54, 162, 235, 1)',
+										'rgba(255, 206, 86, 1)',
+										'rgba(75, 192, 192, 1)',
+										'rgba(153, 102, 255, 1)',
+										'rgba(255, 159, 64, 1)'
+									],
+									borderWidth: 1
+								}]
+							},
+							options: {
+								scales: {
+									yAxes: [{
+										ticks: {
+											beginAtZero: true
+										}
+									}]
 								}
-							}]
-						}
-					}
-				});
-			</script>
+							}
+						});
+				<?php/*
+				}*/?>
+					</script>
 		</center>
 	</body>
 </html>

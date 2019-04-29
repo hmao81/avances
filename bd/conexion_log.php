@@ -3,12 +3,12 @@ session_start();
 
 include('def_globales.inc');
 
-//sesion
+//en caso de que se haya finalizado la sesion redirige al login
 if ($_SESSION["autentificado"] != "SI") 
 {  	echo "
 	<script>alert('Su sesion ha expirado, por favor autenticarse');</script>";
 	echo "
-	<script>location.href='../login.php';</script>";
+	<script>location.href='index.php';</script>";
 	exit;
 } 
 else 
@@ -23,6 +23,6 @@ else
     $_SESSION["ultimoAcceso"] = $ahora;
 	}
 } 
-//fin sesion
+//conexion con la BD para verificar informacion
 $conn = new mysqli($servidor,$usuario,$clave,$base);
 ?>
