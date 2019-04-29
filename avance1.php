@@ -38,7 +38,8 @@ if (isset($_GET['porcentajeParam']))
 ?>
 <!-- Funciones en javascript-->
 <!-- Librerias grafico de barras-->
-<script src="ejemplo-chart/js/chart.js/Chart.min.js">
+<script src="js/chart/js/chart.js/Chart.min.js"></script>
+<script>
 	/* Funcion Agregar Avances lo envia a la clase avance2.php */
 	function insertar()
 	{
@@ -153,6 +154,7 @@ if (isset($_GET['porcentajeParam']))
 	.chart {
 		width: 90% !important;
 		height: 90% !important;
+		background-color: #FFF;
 	}
 </style>
 <!-- Encabezado HTML -->
@@ -305,7 +307,7 @@ if (isset($_GET['porcentajeParam']))
 					</table><?php
 				}?>
 			</form>
-
+<pre>
 			<?php
 
 /* Paso de variables para la consulta por codigo, requerimiento y fecha declaradas parte superior*/
@@ -349,7 +351,34 @@ if (isset($_GET['porcentajeParam']))
 						$nombre = $row["nombre"];
 						$apellidos = $row["apellidos"];
 */
-						?>
+
+
+
+
+
+			$sql1 = "SELECT SUM(av.porcentaje_avance) as porcentaje, av.id_usuario, us.nombre, us.apellidos
+				FROM tbavances av
+					JOIN usuarios us ON (av.id_usuario = us.id)
+				GROUP BY av.id_usuario
+				ORDER BY av.id_usuario";
+			$resultado = $conn->query($sql1);
+			$consolidadoAvances = $resultado->num_rows;
+
+			$labels = '';
+			$data = '';
+			for ($i = 1; $i <= $consolidadoAvances; $i++) {
+				$fila = $resultado->fetch_assoc();
+				//Creacion de variables
+				$nombres = '"' . $fila['nombre'] . ' ' . $fila['apellidos'] . '"';
+				$porcentaje = $fila['porcentaje'];
+				//Concateno las variables y las separo con ,
+				$labels .= $nombres . ','; // Es igual que escribir $labels = $labels . $nombres . ',';
+				$data .= $porcentaje . ',';
+			}
+			// Quita la coma al final de cada cadena
+			$labels = substr($labels, 0, strlen($labels) - 1);
+			$data = substr($data, 0, strlen($data) - 1);?>
+
 
 						<!-- Lienzo para pintar la imagen -->
 					<canvas class="chart" id="chart1"></canvas>
@@ -360,11 +389,11 @@ if (isset($_GET['porcentajeParam']))
 							type: 'bar',
 							data: {
 								/* '$idUsuario' entre tags php */
-								labels: ['Usuario 1', 'Usuario 2', 'Usuario 3', 'Usuario 4', 'Usuario 5', 'Usuario 6'],
+								labels: [<?php echo $labels?>],
 								datasets: [{
 									/* '$porcentaje_avance_c' entre tags php  */
 									label: 'Porcentaje Usuarios',
-									data: [50, 0, 85, 38, 23, 44],
+									data: [<?php echo $data?>],
 									backgroundColor: [
 										'rgba(255, 99, 132, 0.2)',
 										'rgba(54, 162, 235, 0.2)',
@@ -394,8 +423,8 @@ if (isset($_GET['porcentajeParam']))
 								}
 							}
 						});
-				<?php/*
-				}*/?>
+
+				//}
 					</script>
 		</center>
 	</body>
