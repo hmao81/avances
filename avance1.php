@@ -221,22 +221,22 @@ if (isset($_GET['fechaParam']))
 
 				$sqlRequerimiento = '';
 				if ($requerimientoParam != null)
-					$sqlRequerimiento = ' AND av.requerimiento LIKE "%' . $requerimientoParam . '%"';
+					$sqlRequerimiento = ' AND av.requerimiento LIKE "%' . utf8_decode($requerimientoParam) . '%"';
 
 				$sqlFecha = '';
 				if ($fechaParam != null)
 					$sqlFecha = ' AND DATE(av.fecha) = "' . $fechaParam . '"';
 					
 				/* Query que consulta y trae los datos de la base para llenar la tabla y el grafico*/
-				$sql = "SELECT av.*, us.usuarios, SUM(av.porcentaje_avance) as porcentaje, av.id_usuario, us.nombre, us.apellidos
+				$sql = "SELECT av.id, av.codigo, av.requerimiento, av.avance, av.fecha, av.porcentaje_avance, us.usuarios, SUM(av.porcentaje_avance) as porcentaje, av.id_usuario, us.nombre, us.apellidos
 					FROM tbavances av
 						JOIN usuarios us ON av.id_usuario = us.id
-					WHERE 1 = 1 
-					GROUP BY av.id_usuario
-					ORDER BY av.id_usuario";"
+					WHERE 1 = 1"
 						. $sqlCodigo
-						. $sqlRequerimiento 
-						. $sqlFecha . ";
+						. $sqlRequerimiento
+						. $sqlFecha . "
+					GROUP BY av.id_usuario
+					ORDER BY av.id_usuario";
 				$result = $conn->query($sql);
 				$total = $result->num_rows;
 				
@@ -263,7 +263,7 @@ if (isset($_GET['fechaParam']))
 							$requerimiento_c = $row["requerimiento"];
 							$avance_c = $row["avance"];
 							$fecha_c = $row["fecha"];
-							$porcentaje_avance_c = $row["porcentaje_avance"];
+							$porcentaje_avance_c = $row["porcentaje"];
 							$idUsuario = $row["usuarios"];
 							?>
 							<tr>								
