@@ -17,36 +17,17 @@ if (isset($_GET['requerimientoParam']))
 $fechaParam = null;
 if (isset($_GET['fechaParam']))
 	$fechaParam = $_GET['fechaParam'];
-
-/* Paso de variables para el grafico
-$usuarioParam = null;
-if (isset($_GET['usuarioParam']))
-	$usuarioParam = $_POST['usuarioParam'];
-	
-$nombreParam = null;
-if (isset($_GET['nombreParam']))
-	$nombreParam = $_POST['nombreParam'];
-	
-$apellidosParam = null;
-if (isset($_GET['apellidosParam']))
-	$apellidosParam = $_POST['apellidosParam'];	
-	
-$porcentajeParam = null;
-if (isset($_GET['porcentajeParam']))
-	$porcentajeParam = $_POST['porcentajeParam'];	
-*/	
 ?>
 <!-- Funciones en javascript-->
-<!-- Librerias grafico de barras-->
+<!-- Librerias que cargan el grafico-->
 <script src="js/chart/js/chart.js/Chart.min.js"></script>
 <script>
 	/* Funcion Agregar Avances lo envia a la clase avance2.php */
 	function insertar()
 	{
 		if(form.checkValidity()){
-
 			debugger;
-
+			
 			alert('Agregando el avance al sistema...');
 
 			document.form.op.value='I';
@@ -54,7 +35,6 @@ if (isset($_GET['porcentajeParam']))
 			document.form.submit();
 		}
 	}
-
 	/* Funcion Modificar Avances */
 	function editar(id, codigo, avance, requerimiento, porcentaje_avance)
 	{
@@ -115,7 +95,7 @@ if (isset($_GET['porcentajeParam']))
 	/* formato a las tablas */
 	table{
 		border-spacing: 0;
-		display: flex;	    	/* Se ajuste dinamicamente al tamano del dispositivo */
+		display: flex;	    	/* Se ajusta dinamicamente al tamaño del dispositivo */
 		max-height: 40vh;		/* El alto que necesitemos */
 		overflow-y: auto; 		/* scroll vertical         */
 		overflow-x: auto; 		/* scroll horizontal       */
@@ -150,7 +130,7 @@ if (isset($_GET['porcentajeParam']))
 		background: none repeat scroll 0 0 #edebeb;
 	}
 
-	/* Administra el tamaño en % del grafico de barras */
+	/* Administra el tamaño en % y el color de fondo del grafico de barras */
 	.chart {
 		width: 90% !important;
 		height: 90% !important;
@@ -234,7 +214,7 @@ if (isset($_GET['porcentajeParam']))
 				
 				<!-- Consulta avances -->		
 				<?php
-				/* Paso de variables para la consulta por codigo, requerimiento y fecha declaradas parte superior*/
+				/* Paso de variables para consultar por codigo, requerimiento y fecha declaradas parte superior*/
 				$sqlCodigo = '';
 				if ($codigoParam != null)
 					$sqlCodigo = ' AND av.codigo = "' . $codigoParam . '"';
@@ -247,17 +227,21 @@ if (isset($_GET['porcentajeParam']))
 				if ($fechaParam != null)
 					$sqlFecha = ' AND DATE(av.fecha) = "' . $fechaParam . '"';
 					
-				/* Query que consulta y trae los datos de la base para llenar la tabla*/
-				$sql = "SELECT av.*, us.usuarios
+				/* Query que consulta y trae los datos de la base para llenar la tabla y el grafico*/
+				$sql = "SELECT av.*, us.usuarios, SUM(av.porcentaje_avance) as porcentaje, av.id_usuario, us.nombre, us.apellidos
 					FROM tbavances av
 						JOIN usuarios us ON av.id_usuario = us.id
-					WHERE 1 = 1"
+					WHERE 1 = 1 
+					GROUP BY av.id_usuario
+					ORDER BY av.id_usuario";"
 						. $sqlCodigo
 						. $sqlRequerimiento 
-						. $sqlFecha . "
-					ORDER BY av.id";
+						. $sqlFecha . ";
 				$result = $conn->query($sql);
 				$total = $result->num_rows;
+				$consolidadoAvances = $result->num_rows;
+				$labels = '';
+				$data = '';
 				if ($total > 0) {?>
 					<!-- Tabla registros avances, cabecera fija -->
 					<table border="1">
@@ -273,9 +257,7 @@ if (isset($_GET['porcentajeParam']))
 						</tr>
 					</table>
 					<table border="1"><?php
-						/*-- 
-						Llenado de la tabla con datos de la base 
-						*/
+						/*-- Llenado de la tabla con datos de la base */
 						for ($i = 1; $i <= $total;$i++) {
 							$row = $result->fetch_assoc();
 							$id_c = $row["id"];
@@ -305,95 +287,35 @@ if (isset($_GET['porcentajeParam']))
 							</tr><?php
 						}?>
 					</table><?php
-				}?>
-			</form>
-<pre>
-			<?php
-
-/* Paso de variables para la consulta por codigo, requerimiento y fecha declaradas parte superior*/
-/*
-				$sqlUsuario = '';
-				if ($usuarioParam != null)
-					$sqlUsuario = ' AND a.id_usuario = "' . $usuarioParam . '"';
-			
-					$sqlNombre = '';
-				if ($nombreParam != null)
-					$sqlNombre = ' AND u.nombre = "' . $nombreParam . '"';
-
-					$sqlApellidos = '';
-				if ($apellidosParam != null)
-					$sqlApellidos = ' AND u.apellidos = "' . $apellidosParam . '"';
-
-					$sqlPorcentaje_avance = '';
-					if ($porcentajeParam != null)
-						$sqlPorcentaje_avance = ' AND a.porcentaje_avance = "' . $porcentajeParam . '"';					
-*/
-				/* Query que trae los datos de la base para el grafico */
-/*
-				$sql1 = "SELECT SUM(av.porcentaje_avance), av.id_usuario, us.nombre, us.apellidos
-				FROM tbavances av
-				JOIN usuarios us ON (av.id_usuario = us.id)
-				GROUP BY av.id_usuario"
-						. $sqlUsuario
-						. $sqlNombre
-						. $sqlApellidos
-						. $sqlPorcentaje_avance . "
-					ORDER BY av.id_usuario";
-				$result1 = $conn->query($sql1);
-				$total1 = $result1->num_rows1;
-				
-				if ($total1 > 0) {
-					for ($i = 1; $i <= $total1;$i++) {
-						$row = $result1->fetch_assoc();
-						$id_c = $row["id"];
-						$porcentaje_avance_c = $row["porcentaje_avance"];
-						$idUsuario = $row["usuarios"];
-						$nombre = $row["nombre"];
-						$apellidos = $row["apellidos"];
-*/
-
-
-
-
-
-			$sql1 = "SELECT SUM(av.porcentaje_avance) as porcentaje, av.id_usuario, us.nombre, us.apellidos
-				FROM tbavances av
-					JOIN usuarios us ON (av.id_usuario = us.id)
-				GROUP BY av.id_usuario
-				ORDER BY av.id_usuario";
-			$resultado = $conn->query($sql1);
-			$consolidadoAvances = $resultado->num_rows;
-
-			$labels = '';
-			$data = '';
-			for ($i = 1; $i <= $consolidadoAvances; $i++) {
-				$fila = $resultado->fetch_assoc();
-				//Creacion de variables
-				$nombres = '"' . $fila['nombre'] . ' ' . $fila['apellidos'] . '"';
-				$porcentaje = $fila['porcentaje'];
-				//Concateno las variables y las separo con ,
-				$labels .= $nombres . ','; // Es igual que escribir $labels = $labels . $nombres . ',';
-				$data .= $porcentaje . ',';
-			}
-			// Quita la coma al final de cada cadena
-			$labels = substr($labels, 0, strlen($labels) - 1);
-			$data = substr($data, 0, strlen($data) - 1);?>
-
-
-						<!-- Lienzo para pintar la imagen -->
-					<canvas class="chart" id="chart1"></canvas>
-					<script>
-						var chart1 = document.getElementById('chart1');
-
-						var myChart1 = new Chart(chart1, {
-							type: 'bar',
+				}?>			
+				<!-- Dar formato al texto -->
+				<pre>
+				<?php
+				/* El ciclo consulta y trae los datos a usar en el grafico */		
+				for ($i = 1; $i <= $consolidadoAvances; $i++) {
+					$fila = $result->fetch_assoc();
+					//Creacion de variables
+					$nombres = '"' . $fila['nombre'] . ' ' . $fila['apellidos'] . '"';
+					$porcentaje = $fila['porcentaje'];
+					//Se concatenan las variables y se separan con ,
+					$labels .= $nombres . ','; // Es igual que escribir $labels = $labels . $nombres . ',';
+					$data .= $porcentaje . ',';
+				}
+				// Quita la coma al final de cada cadena
+				$labels = substr($labels, 0, strlen($labels) - 1);
+				$data = substr($data, 0, strlen($data) - 1);?>
+				<!-- Lienzo para pintar la imagen -->
+				<canvas class="chart" id="chart1"></canvas>
+				<script>
+					var chart1 = document.getElementById('chart1');
+					var myChart1 = new Chart(chart1, {
+						// Define el tipo de grafico que se usa pie, bar, etc.
+						type: 'bar',
 							data: {
-								/* '$idUsuario' entre tags php */
 								labels: [<?php echo $labels?>],
-								datasets: [{
-									/* '$porcentaje_avance_c' entre tags php  */
-									label: 'Porcentaje Usuarios',
-									data: [<?php echo $data?>],
+									datasets: [{
+										label: 'Porcentaje Usuarios',
+										data: [<?php echo $data?>],
 									backgroundColor: [
 										'rgba(255, 99, 132, 0.2)',
 										'rgba(54, 162, 235, 0.2)',
@@ -401,7 +323,7 @@ if (isset($_GET['porcentajeParam']))
 										'rgba(75, 192, 192, 0.2)',
 										'rgba(153, 102, 255, 0.2)',
 										'rgba(255, 159, 64, 0.2)'
-									],
+										],
 									borderColor: [
 										'rgba(255, 99, 132, 1)',
 										'rgba(54, 162, 235, 1)',
@@ -409,9 +331,9 @@ if (isset($_GET['porcentajeParam']))
 										'rgba(75, 192, 192, 1)',
 										'rgba(153, 102, 255, 1)',
 										'rgba(255, 159, 64, 1)'
-									],
+										],
 									borderWidth: 1
-								}]
+									}]
 							},
 							options: {
 								scales: {
@@ -423,9 +345,8 @@ if (isset($_GET['porcentajeParam']))
 								}
 							}
 						});
-
-				//}
-					</script>
+				</script>
+			</form>
 		</center>
 	</body>
 </html>
