@@ -239,9 +239,7 @@ if (isset($_GET['fechaParam']))
 						. $sqlFecha . ";
 				$result = $conn->query($sql);
 				$total = $result->num_rows;
-				$consolidadoAvances = $result->num_rows;
-				$labels = '';
-				$data = '';
+				
 				if ($total > 0) {?>
 					<!-- Tabla registros avances, cabecera fija -->
 					<table border="1">
@@ -291,6 +289,11 @@ if (isset($_GET['fechaParam']))
 				<!-- Dar formato al texto -->
 				<pre>
 				<?php
+				$result = $conn->query($sql);
+				$total = $result->num_rows;
+				$consolidadoAvances = $result->num_rows;
+				$labels = '';
+				$data = '';
 				/* El ciclo consulta y trae los datos a usar en el grafico */		
 				for ($i = 1; $i <= $consolidadoAvances; $i++) {
 					$fila = $result->fetch_assoc();
@@ -309,7 +312,7 @@ if (isset($_GET['fechaParam']))
 				<script>
 					var chart1 = document.getElementById('chart1');
 					var myChart1 = new Chart(chart1, {
-						// Define el tipo de grafico que se usa pie, bar, etc.
+						// Define el tipo de grafico que se usa pie, bar, bubble, line, polar area, radar.
 						type: 'bar',
 							data: {
 								labels: [<?php echo $labels?>],
