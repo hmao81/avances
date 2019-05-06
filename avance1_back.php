@@ -221,23 +221,25 @@ if (isset($_GET['fechaParam']))
 
 				$sqlRequerimiento = '';
 				if ($requerimientoParam != null)
-					$sqlRequerimiento = ' AND av.requerimiento LIKE "%' . $requerimientoParam . '%"';
+					$sqlRequerimiento = ' AND av.requerimiento LIKE "%' . utf8_decode($requerimientoParam) . '%"';
 
 				$sqlFecha = '';
 				if ($fechaParam != null)
 					$sqlFecha = ' AND DATE(av.fecha) = "' . $fechaParam . '"';
 					
-				/* Query que consulta y trae los datos de la base para llenar la tabla*/
+				/* Query que consulta y trae los datos de la base para llenar la tabla */
 				$sql = "SELECT av.*, us.usuarios
 					FROM tbavances av
 						JOIN usuarios us ON av.id_usuario = us.id
 					WHERE 1 = 1"
 						. $sqlCodigo
-						. $sqlRequerimiento 
+						. $sqlRequerimiento
 						. $sqlFecha . "
-					ORDER BY av.id";
+					GROUP BY av.id_usuario
+					ORDER BY av.id_usuario";
 				$result = $conn->query($sql);
 				$total = $result->num_rows;
+				
 				if ($total > 0) {?>
 					<!-- Tabla registros avances, cabecera fija -->
 					<table border="1">
@@ -283,75 +285,77 @@ if (isset($_GET['fechaParam']))
 							</tr><?php
 						}?>
 					</table><?php
-				}?>
-			</form>
-			<!-- Dar formato al texto -->
-			<pre>
-			<?php
-			/* Query que trae los datos a usar en el grafico */
-			$sql1 = "SELECT SUM(av.porcentaje_avance) as porcentaje, av.id_usuario, us.nombre, us.apellidos
+				}?>			
+				<!-- Dar formato al texto -->
+				<pre>
+				<?php
+				/* Query que trae los datos a usar en el grafico */
+				$sql = "SELECT av.id, av.codigo, av.requerimiento, av.avance, av.fecha, us.usuarios, SUM(av.porcentaje_avance) as porcentaje, av.id_usuario, us.nombre, us.apellidos
 				FROM tbavances av
 					JOIN usuarios us ON (av.id_usuario = us.id)
 				GROUP BY av.id_usuario
 				ORDER BY av.id_usuario";
-			$resultado = $conn->query($sql1);
-			$consolidadoAvances = $resultado->num_rows;
-			$labels = '';
-			$data = '';
-			for ($i = 1; $i <= $consolidadoAvances; $i++) {
-				$fila = $resultado->fetch_assoc();
-				//Creacion de variables
-				$nombres = '"' . $fila['nombre'] . ' ' . $fila['apellidos'] . '"';
-				$porcentaje = $fila['porcentaje'];
-				//Se concatenan las variables y se separan con ,
-				$labels .= $nombres . ','; // Es igual que escribir $labels = $labels . $nombres . ',';
-				$data .= $porcentaje . ',';
-			}
-			// Quita la coma al final de cada cadena
-			$labels = substr($labels, 0, strlen($labels) - 1);
-			$data = substr($data, 0, strlen($data) - 1);?>
-
-			<!-- Lienzo para pintar la imagen -->
-			<canvas class="chart" id="chart1"></canvas>
-			<script>
-				var chart1 = document.getElementById('chart1');
-				var myChart1 = new Chart(chart1, {
-					type: 'bar',
-						data: {
-							labels: [<?php echo $labels?>],
-								datasets: [{
-									label: 'Porcentaje Usuarios',
-									data: [<?php echo $data?>],
-								backgroundColor: [
-									'rgba(255, 99, 132, 0.2)',
-									'rgba(54, 162, 235, 0.2)',
-									'rgba(255, 206, 86, 0.2)',
-									'rgba(75, 192, 192, 0.2)',
-									'rgba(153, 102, 255, 0.2)',
-									'rgba(255, 159, 64, 0.2)'
-									],
-								borderColor: [
-									'rgba(255, 99, 132, 1)',
-									'rgba(54, 162, 235, 1)',
-									'rgba(255, 206, 86, 1)',
-									'rgba(75, 192, 192, 1)',
-									'rgba(153, 102, 255, 1)',
-									'rgba(255, 159, 64, 1)'
-									],
-								borderWidth: 1
-								}]
-						},
-						options: {
-							scales: {
-								yAxes: [{
-									ticks: {
-										beginAtZero: true
-									}
-								}]
+				$result = $conn->query($sql);
+				$total = $result->num_rows;
+				$consolidadoAvances = $result->num_rows;
+				$labels = '';
+				$data = '';
+				/* El ciclo consulta y trae los datos a usar en el grafico */		
+				for ($i = 1; $i <= $consolidadoAvances; $i++) {
+					$fila = $result->fetch_assoc();
+					//Creacion de variables
+					$nombres = '"' . $fila['nombre'] . ' ' . $fila['apellidos'] . '"';
+					$porcentaje = $fila['porcentaje'];
+					//Se concatenan las variables y se separan con ,
+					$labels .= $nombres . ','; // Es igual que escribir $labels = $labels . $nombres . ',';
+					$data .= $porcentaje . ',';
+				}
+				// Quita la coma al final de cada cadena
+				$labels = substr($labels, 0, strlen($labels) - 1);
+				$data = substr($data, 0, strlen($data) - 1);?>
+				<!-- Lienzo para pintar la imagen -->
+				<canvas class="chart" id="chart1"></canvas>
+				<script>
+					var chart1 = document.getElementById('chart1');
+					var myChart1 = new Chart(chart1, {
+						// Define el tipo de grafico que se usa pie, bar, bubble, line, polar area, radar.
+						type: 'bar',
+							data: {
+								labels: [<?php echo $labels?>],
+									datasets: [{
+										label: 'Porcentaje Usuarios',
+										data: [<?php echo $data?>],
+									backgroundColor: [
+										'rgba(255, 99, 132, 0.2)',
+										'rgba(54, 162, 235, 0.2)',
+										'rgba(255, 206, 86, 0.2)',
+										'rgba(75, 192, 192, 0.2)',
+											'rgba(153, 102, 255, 0.2)',
+										'rgba(255, 159, 64, 0.2)'
+										],
+									borderColor: [
+										'rgba(255, 99, 132, 1)',
+										'rgba(54, 162, 235, 1)',
+										'rgba(255, 206, 86, 1)',
+										'rgba(75, 192, 192, 1)',
+										'rgba(153, 102, 255, 1)',
+										'rgba(255, 159, 64, 1)'
+										],
+									borderWidth: 1
+									}]
+							},
+							options: {
+								scales: {
+									yAxes: [{
+										ticks: {
+											beginAtZero: true
+										}
+									}]
+								}
 							}
-						}
-					});
-			</script>
+						});
+				</script>
+			</form>
 		</center>
 	</body>
 </html>

@@ -17,12 +17,16 @@ if (isset($_GET['requerimientoParam']))
 $fechaParam = null;
 if (isset($_GET['fechaParam']))
 	$fechaParam = $_GET['fechaParam'];
+
+$usuarioParam = null;
+if (isset($_GET['usuarioParam']))
+	$usuarioParam = $_GET['usuarioParam'];
 ?>
 <!-- Funciones en javascript-->
 <!-- Librerias que cargan el grafico-->
 <script src="js/chart/js/chart.js/Chart.min.js"></script>
 <script>
-	/* Funcion Agregar Avances lo envia a la clase avance2.php */
+	/* Funcion Agregar Avances lo procesa en la clase avance2.php */
 	function insertar()
 	{
 		if(form.checkValidity()){
@@ -73,15 +77,16 @@ if (isset($_GET['fechaParam']))
 		document.form.action='avance2.php';
 		document.form.submit();	
 	}
-
+	/* Creacion de los contructores para buscar por codigo, requerimiento, fecha */
 	function buscarAvance()
 	{
 		const buscarXCodigo = document.getElementById('buscarXCodigo').value;
 		const buscarXRequerimiento = document.getElementById('buscarXRequerimiento').value;
 		const buscarXfecha = document.getElementById('buscarXfecha').value;
+		const buscarXUsuario = document.getElementById('buscarXUsuario').value;
 
 		window.location.href = 'avance1.php?codigoParam=' + buscarXCodigo + '&requerimientoParam=' 
-		+ buscarXRequerimiento + '&fechaParam=' + buscarXfecha;
+		+ buscarXRequerimiento + '&fechaParam=' + buscarXfecha + '&usuarioParam=' + buscarXUsuario;
 	}
 </script>
 
@@ -172,11 +177,11 @@ if (isset($_GET['fechaParam']))
 				<br /><br />
 
 				<font color="black">Avance</font>&nbsp; &nbsp;<br />
-				<textarea name="avance" id="avance" rows="4"  cols="50"></textarea>
+				<textarea name="porcentaje_avance" id="porcentaje_avance" rows="4"  cols="50"></textarea>
 				<br /><br />
 			
 				<font color="black">Porcentaje de Avance</font>&nbsp; &nbsp;<br />
-				<input type="text" name="porcentaje_avance" id="porcentaje_avance" size="3" required> %
+				<input type="text" name="porcenta" id="porcenta" size="3" required> %
 				<br /><br />
 			
 				<!-- Boton enviar formulario -->
@@ -191,7 +196,7 @@ if (isset($_GET['fechaParam']))
 				<!-- Titulo tabla de registros avances -->
 				<font size=6 color="black">Histórico Avances</font>
 				<br /><br />
-
+				<!-- Se crean los campos en el formulario de busqueda -->
 				<font>Código</font>
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				&nbsp;&nbsp;&nbsp;
@@ -207,14 +212,22 @@ if (isset($_GET['fechaParam']))
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				&nbsp;&nbsp;&nbsp;&nbsp;
+			
 				<!-- Boton buscar por la fecha -->
 				<input type="date" id="buscarXfecha" name="buscarXfecha" value="<?php echo $fechaParam?>" /><br /><br />
+				
+				<font>Usuario</font>
+				&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;
+				<input type="text" id="buscarXUsuario" name="buscarXUsuario" value="<?php 
+				echo $usuarioParam?>" /><br /><br />
 				
 				<button id="buscar" value="Buscar" onclick="buscarAvance();">Buscar</button><br /><br />
 				
 				<!-- Consulta avances -->		
 				<?php
-				/* Paso de variables para consultar por codigo, requerimiento y fecha declaradas parte superior*/
+				/* Paso de variables para consultar por codigo, requerimiento y fecha creadas en la funcion buscar*/
 				$sqlCodigo = '';
 				if ($codigoParam != null)
 					$sqlCodigo = ' AND av.codigo = "' . $codigoParam . '"';
@@ -226,15 +239,20 @@ if (isset($_GET['fechaParam']))
 				$sqlFecha = '';
 				if ($fechaParam != null)
 					$sqlFecha = ' AND DATE(av.fecha) = "' . $fechaParam . '"';
-					
-				/* Query que consulta y trae los datos de la base para llenar la tabla y el grafico*/
-				$sql = "SELECT av.id, av.codigo, av.requerimiento, av.avance, av.fecha, av.porcentaje_avance, us.usuarios, SUM(av.porcentaje_avance) as porcentaje, av.id_usuario, us.nombre, us.apellidos
+
+				$sqlUsuario = '';
+				if ($usuarioParam != null)
+					$sqlUsuario = ' AND us.usuarios LIKE "%' . $usuarioParam . '%"';
+						
+				/* Query que consulta y trae los datos de la base para llenar la tabla */
+				$sql = "SELECT av.*, us.usuarios
 					FROM tbavances av
 						JOIN usuarios us ON av.id_usuario = us.id
 					WHERE 1 = 1"
 						. $sqlCodigo
 						. $sqlRequerimiento
-						. $sqlFecha . "
+						. $sqlFecha
+						. $sqlUsuario ."
 					GROUP BY av.id_usuario
 					ORDER BY av.id_usuario";
 				$result = $conn->query($sql);
@@ -263,7 +281,7 @@ if (isset($_GET['fechaParam']))
 							$requerimiento_c = $row["requerimiento"];
 							$avance_c = $row["avance"];
 							$fecha_c = $row["fecha"];
-							$porcentaje_avance_c = $row["porcentaje"];
+							$porcentaje_avance_c = $row["porcentaje_avance"];
 							$idUsuario = $row["usuarios"];
 							?>
 							<tr>								
@@ -289,7 +307,12 @@ if (isset($_GET['fechaParam']))
 				<!-- Dar formato al texto -->
 				<pre>
 				<?php
-				$result = $conn->query($sql);
+				/* Query que trae los datos a usar en el grafico */
+				$sql = "SELECT  us.nombre, us.apellidos, us.usuarios, SUM(av.porcentaje_avance) as porcentaje
+				FROM tbavances av
+					JOIN usuarios us ON (av.id_usuario = us.id)
+				GROUP BY us.usuarios";
+				$result1 = $conn->query($sql);
 				$total = $result->num_rows;
 				$consolidadoAvances = $result->num_rows;
 				$labels = '';
@@ -324,7 +347,7 @@ if (isset($_GET['fechaParam']))
 										'rgba(54, 162, 235, 0.2)',
 										'rgba(255, 206, 86, 0.2)',
 										'rgba(75, 192, 192, 0.2)',
-										'rgba(153, 102, 255, 0.2)',
+											'rgba(153, 102, 255, 0.2)',
 										'rgba(255, 159, 64, 0.2)'
 										],
 									borderColor: [

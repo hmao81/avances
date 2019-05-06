@@ -12,7 +12,7 @@ if ($_SESSION["autentificado"] != "SI")
 	exit;
 } 
 else 
-{  
+{
 	$fechaGuardada = $_SESSION["ultimoAcceso"];
     $ahora = date("Y-n-j H:i:s");
     $tiempo_transcurrido = (strtotime($ahora)-strtotime($fechaGuardada));
@@ -22,7 +22,7 @@ else
 	}else {
     $_SESSION["ultimoAcceso"] = $ahora;
 	}
-} 
+}
 //conexion con la BD para verificar informacion
 $conn = new mysqli($servidor,$usuario,$clave,$base);
 ?>
