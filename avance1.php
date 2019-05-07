@@ -54,7 +54,7 @@ if (isset($_GET['usuarioParam']))
 		document.form.codigo.value = codigo;
 		document.form.avance.value = avance;
 		document.form.requerimiento.value = requerimiento;
-		document.form.porcentaje_avance.value = porcentaje_avance;
+		document.form.porcenta.value = porcentaje_avance;
 
 		document.form.bti.style.display='none';
 		document.form.btm.style.display='block';
@@ -169,7 +169,7 @@ if (isset($_GET['usuarioParam']))
 				<input type="hidden" name="id" id="id" />
 
 				<font color="black">Código</font>&nbsp;<br />
-				<input type="text" name="codigo" id="codigo" required>
+				<input type="text" name="codigo" id="codigo" maxlength="10" required>
 				<br /><br />
 
 				<font color="black">Requerimiento</font>&nbsp;<br />
@@ -177,11 +177,11 @@ if (isset($_GET['usuarioParam']))
 				<br /><br />
 
 				<font color="black">Avance</font>&nbsp; &nbsp;<br />
-				<textarea name="porcentaje_avance" id="porcentaje_avance" rows="4"  cols="50"></textarea>
+				<textarea name="avance" id="avance" rows="4"  cols="50"></textarea>
 				<br /><br />
 			
 				<font color="black">Porcentaje de Avance</font>&nbsp; &nbsp;<br />
-				<input type="text" name="porcenta" id="porcenta" size="3" required> %
+				<input type="text" name="porcenta" id="porcenta" size="3" maxlength="3" required> %
 				<br /><br />
 			
 				<!-- Boton enviar formulario -->
@@ -245,7 +245,7 @@ if (isset($_GET['usuarioParam']))
 					$sqlUsuario = ' AND us.usuarios LIKE "%' . $usuarioParam . '%"';
 						
 				/* Query que consulta y trae los datos de la base para llenar la tabla */
-				$sql = "SELECT av.*, us.usuarios
+				$sql = "SELECT av.*, us.usuarios, us.nombre, us.apellidos
 					FROM tbavances av
 						JOIN usuarios us ON av.id_usuario = us.id
 					WHERE 1 = 1"
@@ -253,7 +253,6 @@ if (isset($_GET['usuarioParam']))
 						. $sqlRequerimiento
 						. $sqlFecha
 						. $sqlUsuario ."
-					GROUP BY av.id_usuario
 					ORDER BY av.id_usuario";
 				$result = $conn->query($sql);
 				$total = $result->num_rows;
@@ -283,19 +282,19 @@ if (isset($_GET['usuarioParam']))
 							$fecha_c = $row["fecha"];
 							$porcentaje_avance_c = $row["porcentaje_avance"];
 							$idUsuario = $row["usuarios"];
-							?>
+							$nombre = $row["nombre"];
+							$apellidos = $row["apellidos"];?>
 							<tr>								
 								<td bgcolor="white"><?php echo $codigo_c?></td>
 								<td bgcolor="white"><?php echo utf8_encode($requerimiento_c)?></td>
 								<td bgcolor="white"><?php echo utf8_encode($avance_c)?></td>
 								<td bgcolor="white"><?php echo $fecha_c?></td>
 								<td bgcolor="white"><?php echo $porcentaje_avance_c?></td>
-								<td class="tdAction" bgcolor="white"><?php echo $idUsuario?></td>
+								<td class="tdAction" bgcolor="white"><?php echo $nombre . ' ' . $apellidos . ' (' . $idUsuario . ')'?></td>
 								<!-- boton editar (editar codifica/decodifica la lectura de tildes) avances -->
 								<td class="tdAction"><input type=button value='Editar' onclick="editar('<?php echo $id_c?>', 
 								'<?php echo $codigo_c?>', '<?php echo base64_encode($avance_c)?>', 
-								'<?php echo base64_encode($requerimiento_c)?>', '<?php base64_encode($fecha_c)?>',
-								'<?php echo $porcentaje_avance_c?>');"></td>
+								'<?php echo base64_encode($requerimiento_c)?>','<?php echo $porcentaje_avance_c?>');"></td>
 								<!-- boton eliminar avances -->
 								<td class="tdAction"><input type=button value='Eliminar' onclick="eliminar('<?php 
 								echo $id_c?>');">
@@ -308,21 +307,31 @@ if (isset($_GET['usuarioParam']))
 				<pre>
 				<?php
 				/* Query que trae los datos a usar en el grafico */
-				$sql = "SELECT  us.nombre, us.apellidos, us.usuarios, SUM(av.porcentaje_avance) as porcentaje
-				FROM tbavances av
-					JOIN usuarios us ON (av.id_usuario = us.id)
-				GROUP BY us.usuarios";
+//				$sql = "SELECT  us.nombre, us.apellidos, us.usuarios, SUM(av.porcentaje_avance) as porcentaje
+//				FROM tbavances av
+//					JOIN usuarios us ON (av.id_usuario = us.id)
+//				GROUP BY us.usuarios";
+
+
+				$sql = "SELECT SUM(av.porcentaje_avance) AS porcentaje_avance, us.usuarios, us.nombre, us.apellidos
+					FROM tbavances av
+						JOIN usuarios us ON av.id_usuario = us.id
+					WHERE 1 = 1"
+						. $sqlCodigo
+						. $sqlRequerimiento
+						. $sqlFecha
+						. $sqlUsuario ."
+					GROUP BY us.usuarios";
 				$result1 = $conn->query($sql);
-				$total = $result->num_rows;
 				$consolidadoAvances = $result->num_rows;
 				$labels = '';
 				$data = '';
 				/* El ciclo consulta y trae los datos a usar en el grafico */		
 				for ($i = 1; $i <= $consolidadoAvances; $i++) {
-					$fila = $result->fetch_assoc();
+					$fila = $result1->fetch_assoc();
 					//Creacion de variables
 					$nombres = '"' . $fila['nombre'] . ' ' . $fila['apellidos'] . '"';
-					$porcentaje = $fila['porcentaje'];
+					$porcentaje = $fila['porcentaje_avance'];
 					//Se concatenan las variables y se separan con ,
 					$labels .= $nombres . ','; // Es igual que escribir $labels = $labels . $nombres . ',';
 					$data .= $porcentaje . ',';

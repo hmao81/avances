@@ -7,6 +7,7 @@ $id = $_REQUEST['id'];
 $codigo = $_REQUEST['codigo'];
 $avance = utf8_decode($_REQUEST['avance']);
 $requerimiento = utf8_decode($_REQUEST['requerimiento']);
+$porcenta = $_REQUEST['porcenta'];
 $fecha = (isset($_REQUEST['fecha'])) ? $_REQUEST['fecha'] : '';
 
 echo "opcion:".$opcion;
@@ -18,8 +19,8 @@ echo "<br>fecha:".$fecha;
 /* Inserta avances */
 if($opcion=='I')
 {
-	$sql = "INSERT INTO tbavances (codigo, avance, requerimiento, fecha, id_usuario)
-	VALUES ('" . $codigo . "', '" . $avance . "', '" . $requerimiento . "', NOW(), '" . $_SESSION['id_usuario'] . "')";
+	$sql = "INSERT INTO tbavances (codigo, avance, requerimiento, porcentaje_avance, fecha, id_usuario)
+	VALUES ('" . $codigo . "', '" . $avance . "', '" . $requerimiento . "', '" . $porcenta . "', NOW(), '" . $_SESSION['id_usuario'] . "')";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "Agregando Avance";
