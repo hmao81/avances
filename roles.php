@@ -121,8 +121,8 @@ Gestor de Permisos a los Modulos.
 				echo "
 				<table border=1>
 					<tr>
-						<td align=center bgcolor=white>nombre</td>
-						<td align=center bgcolor=white>op</td>";
+						<td align=center bgcolor=white>Aplicación</td>
+						<td align=center bgcolor=white>Habilitar</td>";
 				/* Consulta registros aplicaciones */
 					$sql = "SELECT * FROM aplicaciones";
 					$result = $conn->query($sql);

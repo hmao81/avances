@@ -307,12 +307,6 @@ if (isset($_GET['usuarioParam']))
 				<pre>
 				<?php
 				/* Query que trae los datos a usar en el grafico */
-//				$sql = "SELECT  us.nombre, us.apellidos, us.usuarios, SUM(av.porcentaje_avance) as porcentaje
-//				FROM tbavances av
-//					JOIN usuarios us ON (av.id_usuario = us.id)
-//				GROUP BY us.usuarios";
-
-
 				$sql = "SELECT SUM(av.porcentaje_avance) AS porcentaje_avance, us.usuarios, us.nombre, us.apellidos
 					FROM tbavances av
 						JOIN usuarios us ON av.id_usuario = us.id
