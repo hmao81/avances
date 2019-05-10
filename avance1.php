@@ -151,7 +151,7 @@ if (isset($_GET['usuarioParam']))
 	</head>
 	<body>
 		<!-- Titulo Animado-->
-		<marquee><font size="7" color="black">Agregar / Actualizar / Eliminar / Buscar Avances</font></marquee>
+		<marquee><font size="7" color="black">Administración de Avances</font></marquee>
 		<br /><br />
 		<!-- Logo animado -->
 		<div class="container">
@@ -194,7 +194,7 @@ if (isset($_GET['usuarioParam']))
 				<br /><br />
 
 				<!-- Titulo tabla de registros avances -->
-				<font size=6 color="black">Histórico Avances</font>
+				<font size=6 color="black">Buscar Avances</font>
 				<br /><br />
 				<!-- Se crean los campos en el formulario de busqueda -->
 				<font>Código</font>
@@ -301,7 +301,10 @@ if (isset($_GET['usuarioParam']))
 								</td>
 							</tr><?php
 						}?>
-					</table><?php
+					</table>
+					<br /><br />
+				<!-- Titulo grafico -->
+				<font size=6 color="black">Avances por Usuario ( % )</font><?php
 				}?>			
 				<!-- Dar formato al texto -->
 				<pre>

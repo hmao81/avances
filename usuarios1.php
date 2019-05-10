@@ -110,7 +110,7 @@ include('bd/conexion_log.php');
 <!-- Encabezado HTML -->
 	<body>
 	<!-- Titulo Animado -->
-	<marquee><font size=7 color="black">Agregar Usuarios</font></marquee>
+	<marquee><font size=7 color="black">Administración de Usuarios</font></marquee>
 		<BR>
 		<BR>
 		<center>
