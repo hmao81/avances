@@ -93,8 +93,8 @@ if (isset($_GET['usuarioParam']))
 <!-- Configurar fondo de pantalla-->
 <style type="text/css">
 	html {
-		background: url(img/fondo.jpg);
-		background-size: 100%;
+		/* background: url(img/fondo.jpg);
+		background-size: 100%; */
 	}
 
 	/* formato a las tablas */

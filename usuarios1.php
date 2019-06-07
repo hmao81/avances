@@ -58,8 +58,8 @@ include('bd/conexion_log.php');
 <!-- Configurar fondo de pantalla -->
 <style>
 	html {
-		background: url(img/fondo.jpg);
-		background-size: 100%;
+		/* background: url(img/fondo.jpg);
+		background-size: 100%; */
 	}
 
 	/* formato a las tablas */

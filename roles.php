@@ -45,8 +45,8 @@ Gestor de Permisos a los Modulos.
 <style>
 	html {
 
-		background: url(img/fondo.jpg);
-		background-size: 100%;
+		/* background: url(img/fondo.jpg);
+		background-size: 100%; */
 	}
 </style>
 <!-- Encabezado HTML -->
