@@ -52,10 +52,13 @@ Gestor de Permisos a los Modulos.
 <!-- Encabezado HTML -->
 <html>
 	<head>
+		<!-- Codificacion HTML UTF8 -->
 		<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
-		<TITLE>Permisos de Usuario</TITLE>
+		<title>Permisos de Usuario</title>
+		<!-- Bootstrap -->
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 		<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
+		<!-- Logo animado -->
 		<link rel="StyleSheet" href="css/estilos.css" type="text/css"> 
 	</head>
 	<body>
