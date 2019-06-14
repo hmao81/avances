@@ -63,14 +63,14 @@ Gestor de Permisos a los Modulos.
 	</head>
 	<body>
 	<!-- Titulo animado -->
-		<!-- <marquee><font size=7 color="black">Conceder Permisos por Usuario</font></marquee> -->
-		<!-- Logo animado -->
+		<!-- <marquee><font size=7 color="black">Conceder Permisos por Usuario</font></marquee> -->		
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col">
 					<div class="card">
 						<h5 class="card-header">Conceder Permisos por Usuario</h5>
 						<div class="card-body">
+							<!-- Logo animado -->
 							<!-- <div class="div-img">
 								<img class="img" src="img/logo.gif" title="logo" alt="logo">
 							</div> -->
@@ -123,7 +123,7 @@ Gestor de Permisos a los Modulos.
 								<div class="row">
 									<div class="col-8"><?php
 										if ($us != '') {?>
-											<!-- Titulo tabla de registros usuarios -->
+											<!-- Titulo tabla lista de aplicaciones -->
 											<br><br>
 											<h4>Lista de Aplicaciones</h4>
 											<h6>Usuario = <?=$us?></h6>
