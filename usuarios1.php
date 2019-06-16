@@ -171,12 +171,12 @@ include('bd/conexion_log.php');
 									<div class="col-4 d-flex justify-content-end">
 										<!-- Boton enviar formulario -->
 										<table class='table table-hover'>
-											<thead>
+											
 												<tr>
 													<input type=submit name=bti value='Insertar' onclick='insertar();' >
 													<input type=submit name=btm value='Guardar cambios' onclick='enviar();' style='display:none;'>
 												</tr>
-											</thead>
+											
 										</table>
 									</div>
 								</div>
@@ -240,7 +240,7 @@ include('bd/conexion_log.php');
 									</div>
 								</div>
 							</form>
-						/div>
+						</div>
 					</div>
 				</div>
 			</div>
